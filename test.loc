@@ -1,0 +1,4 @@
+module test-vector-py (test)
+
+import vector.test (test)
+import vector-py

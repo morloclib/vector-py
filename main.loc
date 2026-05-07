@@ -1,0 +1,15 @@
+module vector-py (*)
+
+import vector
+import root-py
+
+-- Vector maps to a flat (1D) numpy.ndarray. The "numpy.ndarray" hint
+-- triggers the morloc deserializer's zero-copy fast path, avoiding the
+-- Python list intermediate that would arise from the generic List mapping.
+type Py => (Vector (n :: Nat) a) = "numpy.ndarray" n a
+
+source Py from "vector.py"
+    ( "morloc_zeros1" as zeros1
+    , "morloc_ones1"  as ones1
+    , "morloc_fill1"  as fill1
+    )

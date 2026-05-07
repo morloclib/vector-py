@@ -1,0 +1,11 @@
+name: vector-py
+version: 0.1.0
+homepage: https://github.com/morloclib/vector-py
+synopsis: Python (NumPy) implementations for the vector module
+description: NumPy-backed implementations of the Nat-parameterised dense 1D vector primitives.
+category: data
+license: MIT
+author: "Zebulun Arendsee"
+maintainer: "z@morloc.io"
+github: https://github.com/morloclib/vector-py
+bug-reports: https://github.com/morloclib/vector-py
