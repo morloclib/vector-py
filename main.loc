@@ -6,10 +6,47 @@ import root-py
 -- Vector maps to a flat (1D) numpy.ndarray. The "numpy.ndarray" hint
 -- triggers the morloc deserializer's zero-copy fast path, avoiding the
 -- Python list intermediate that would arise from the generic List mapping.
-type Py => (Vector (n :: Nat) a) = "numpy.ndarray" n a
+
+type Py => (Vector (n :: Nat) a)   = "numpy.ndarray" n a
 
 source Py from "vector.py"
     ( "morloc_zeros1" as zeros1
     , "morloc_ones1"  as ones1
     , "morloc_fill1"  as fill1
     )
+
+-- Typeclass-method backends for Vector. @morloc_vec_*@ in vector.py
+-- iterate over numpy arrays directly (numpy arrays are iterable like
+-- Python lists for the element-wise patterns these methods need).
+
+instance Semigroup (Vector n a) where
+  %inline source Py ((+) as (<>))
+
+instance Monoid (Vector n a) where
+  mempty = []
+
+instance Functor (Vector n) where
+  %inline source Py from "vector.py" ("morloc_vec_map" as map)
+
+instance Foldable (Vector n) where
+  %inline source Py from "vector.py"
+    ( "morloc_vec_fold" as fold
+    , "morloc_vec_fold1" as fold1
+    , "morloc_vec_safeFold1" as safeFold1
+    )
+
+instance Eq (Vector n a) where
+  %inline source Py from "vector.py" ("morloc_vec_eq" as (==))
+
+instance Ord (Vector n a) where
+  %inline source Py from "vector.py" ("morloc_vec_le" as (<=))
+
+-- Vector packs as a Python @list@ on the wire; the per-language form
+-- is @numpy.ndarray@. @Packable a b@ has @pack :: a -> b@ (wire ->
+-- native) and @unpack :: b -> a@ (native -> wire); so pack is
+-- "list -> ndarray" and unpack is "ndarray -> list".
+instance Packable (List a) (Vector n a) where
+  source Py from "vector.py"
+   ( "morloc_unpackVector" as pack    -- list -> ndarray
+   , "morloc_packVector"   as unpack  -- ndarray -> list
+   )
