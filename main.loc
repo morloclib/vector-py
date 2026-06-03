@@ -19,11 +19,17 @@ source Py from "vector.py"
 -- iterate over numpy arrays directly (numpy arrays are iterable like
 -- Python lists for the element-wise patterns these methods need).
 
-instance Semigroup (Vector n a) where
-  %inline source Py ((+) as (<>))
+instance SemigroupDim Vector where
+  %inline source Py ((+) as (++))
 
-instance Monoid (Vector n a) where
-  mempty = []
+instance MonoidDim Vector where
+  empty0 = []
+
+instance Indexable (Vector n) where
+  %inline source Py from "vector.py" ("morloc_vec_at" as __access_index__)
+
+instance SliceableDim Vector where
+  %inline source Py from "vector.py" ("morloc_vec_slice" as __get_slice_dim__)
 
 instance Functor (Vector n) where
   %inline source Py from "vector.py" ("morloc_vec_map" as map)

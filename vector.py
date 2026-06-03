@@ -45,6 +45,28 @@ def morloc_vec_map(f, xs):
     return arr
 
 
+# Element access via Indexable. Index arrives as ?Int64 to match
+# __to_index__'s return shape; a None index has no semantic meaning at
+# runtime. Python's native list indexing already wraps negative indices
+# from the end, but explicit normalization keeps the semantics aligned
+# with the C++ and R instances (and with root-py's morloc_at).
+def morloc_vec_at(i, xs):
+    if i is None:
+        raise IndexError("morloc_vec_at: index is Null")
+    if i < 0:
+        i += len(xs)
+    return xs[i]
+
+
+# Python-style slice with optional bounds. start/stop/step may each be
+# None (passed as morloc Null). step 0 is a runtime error per the
+# Sliceable contract.
+def morloc_vec_slice(start, stop, step, xs):
+    if step == 0:
+        raise ValueError("slice step cannot be zero")
+    return xs[start:stop:step]
+
+
 def morloc_vec_fold(f, b, xs):
     for x in xs:
         b = f(b, x)
