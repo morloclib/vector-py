@@ -67,6 +67,10 @@ def morloc_vec_slice(start, stop, step, xs):
     return xs[start:stop:step]
 
 
+def morloc_vec_size(xs):
+    return len(xs)
+
+
 def morloc_vec_fold(f, b, xs):
     for x in xs:
         b = f(b, x)

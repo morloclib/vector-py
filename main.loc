@@ -7,7 +7,7 @@ import root-py
 -- triggers the morloc deserializer's zero-copy fast path, avoiding the
 -- Python list intermediate that would arise from the generic List mapping.
 
-type Py => (Vector (n :: Nat) a)   = "numpy.ndarray" n a
+type Py => (Vector (n :: Nat) a) = "numpy.ndarray" n a
 
 source Py from "vector.py"
     ( "morloc_zeros1" as zeros1
@@ -40,6 +40,9 @@ instance Foldable (Vector n) where
     , "morloc_vec_fold1" as fold1
     , "morloc_vec_safeFold1" as safeFold1
     )
+
+instance Sizeable (Vector n a) where
+  %inline source Py from "vector.py" ("morloc_vec_size" as size)
 
 instance Eq (Vector n a) where
   %inline source Py from "vector.py" ("morloc_vec_eq" as (==))
