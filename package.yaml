@@ -9,3 +9,5 @@ author: "Zebulun Arendsee"
 maintainer: "z@morloc.io"
 github: https://github.com/morloclib/vector-py
 bug-reports: https://github.com/morloclib/vector-py
+deps-py:
+  numpy: { version: "*", source: "conda" }
