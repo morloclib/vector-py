@@ -1,5 +1,5 @@
 name: vector-py
-version: 0.4.0
+version: 0.5.0
 homepage: https://github.com/morloclib/vector-py
 synopsis: Python (NumPy) implementations for the vector module
 description: NumPy-backed implementations of the Nat-parameterised dense 1D vector primitives.
