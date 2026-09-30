@@ -116,3 +116,54 @@ def morloc_vec_le(xs, ys):
         if xs[i] > ys[i]:
             return False
     return len(xs) <= len(ys)
+
+
+# Concatenation for SemigroupDim: the result length is the sum of the two
+# input lengths. Python's own `+` cannot serve here -- on a numpy array it
+# is elementwise addition, which requires matching lengths and returns one
+# of them, contradicting `(++) :: f m a -> f n a -> f (m+n) a`.
+def morloc_vec_concat(xs, ys):
+    return np.concatenate((np.asarray(xs), np.asarray(ys)))
+
+
+# Elementwise arithmetic for Integral / Numeric on Vector. numpy applies
+# each of these across the whole array in one vectorized call, which is the
+# point: the alternative is a round trip through a Python list, which costs
+# an object per element in both directions.
+def morloc_vec_neg(xs):
+    return np.negative(xs)
+
+def morloc_vec_abs(xs):
+    return np.absolute(xs)
+
+def morloc_vec_add(xs, ys):
+    return np.add(xs, ys)
+
+def morloc_vec_sub(xs, ys):
+    return np.subtract(xs, ys)
+
+def morloc_vec_mul(xs, ys):
+    return np.multiply(xs, ys)
+
+def morloc_vec_floordiv(xs, ys):
+    return np.floor_divide(xs, ys)
+
+def morloc_vec_mod(xs, ys):
+    return np.mod(xs, ys)
+
+def morloc_vec_pow(xs, ys):
+    return np.power(xs, ys)
+
+def morloc_vec_div(xs, ys):
+    return np.divide(xs, ys)
+
+def morloc_vec_inv(xs):
+    return np.divide(1.0, xs)
+
+def morloc_vec_ln(xs):
+    return np.log(xs)
+
+
+# Elementwise conversion to Real (float64).
+def morloc_vec_toReal(xs):
+    return np.asarray(xs, dtype=np.float64)
