@@ -65,10 +65,15 @@ instance Sizeable (Vector n a) where
   %inline source Py from "vector.py" ("morloc_vec_size" as size)
 
 instance Eq (Vector n a) where
-  %inline source Py from "vector.py" ("morloc_vec_eq" as (==))
+  %inline source Py from "vector.py" ("morloc_vec_eq" as (==), "morloc_vec_ne" as (!=))
 
 instance Ord (Vector n a) where
-  %inline source Py from "vector.py" ("morloc_vec_le" as (<=))
+  %inline source Py from "vector.py"
+    ( "morloc_vec_lt" as (<)
+    , "morloc_vec_le" as (<=)
+    , "morloc_vec_gt" as (>)
+    , "morloc_vec_ge" as (>=)
+    )
 
 -- Vector packs as a Python @list@ on the wire; the per-language form
 -- is @numpy.ndarray@. @Packable a b@ has @pack :: a -> b@ (wire ->

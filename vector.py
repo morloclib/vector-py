@@ -115,6 +115,22 @@ def morloc_vec_eq(xs, ys):
     return bool(np.array_equal(np.asarray(xs), np.asarray(ys)))
 
 
+def morloc_vec_ne(xs, ys):
+    return not morloc_vec_eq(xs, ys)
+
+
+def morloc_vec_lt(xs, ys):
+    return morloc_vec_le(xs, ys) and not morloc_vec_le(ys, xs)
+
+
+def morloc_vec_gt(xs, ys):
+    return morloc_vec_lt(ys, xs)
+
+
+def morloc_vec_ge(xs, ys):
+    return morloc_vec_le(ys, xs)
+
+
 # Lexicographic <= on Vector. Returns True iff xs <= ys element-wise
 # in lexicographic order. For Vectors of differing length, the shorter
 # prefix-matching one compares less.
