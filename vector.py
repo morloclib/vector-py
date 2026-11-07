@@ -35,8 +35,18 @@ def morloc_unpackVector(x):
 # Typeclass-method backends for Vector. numpy arrays are iterable, so
 # the same algorithms used for lists work; we keep the result as a
 # numpy array where the operation preserves shape.
+# The elements of a vector as Python values: a numpy scalar is not the
+# Python form of a morloc scalar (np.int64 == 2 is np.True_, not True).
+def _elements(xs):
+    return xs.tolist() if isinstance(xs, np.ndarray) else list(xs)
+
+
+def _element(x):
+    return x.item() if isinstance(x, np.generic) else x
+
+
 def morloc_vec_map(f, xs):
-    result = [f(x) for x in xs]
+    result = [f(x) for x in _elements(xs)]
     if result and isinstance(result[0], (bool, int, float, np.bool_, np.integer, np.floating)):
         return np.asarray(result)
     arr = np.empty(len(result), dtype=object)
@@ -55,7 +65,7 @@ def morloc_vec_at(i, xs):
         raise IndexError("morloc_vec_at: index is Null")
     if i < 0:
         i += len(xs)
-    return xs[i]
+    return _element(xs[i])
 
 
 # Python-style slice with optional bounds. start/stop/step may each be
@@ -72,23 +82,25 @@ def morloc_vec_size(xs):
 
 
 def morloc_vec_fold(f, b, xs):
-    for x in xs:
+    for x in _elements(xs):
         b = f(b, x)
     return b
 
 
 def morloc_vec_fold1(f, xs):
-    acc = xs[0]
-    for x in xs[1:]:
+    ys = _elements(xs)
+    acc = ys[0]
+    for x in ys[1:]:
         acc = f(acc, x)
     return acc
 
 
 def morloc_vec_safeFold1(f, xs):
-    if len(xs) == 0:
+    ys = _elements(xs)
+    if len(ys) == 0:
         return None
-    acc = xs[0]
-    for x in xs[1:]:
+    acc = ys[0]
+    for x in ys[1:]:
         acc = f(acc, x)
     return acc
 
